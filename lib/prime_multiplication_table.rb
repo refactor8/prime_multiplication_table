@@ -7,7 +7,7 @@ require "prime_multiplication_table/eratosthenes_generator"
 require "prime_multiplication_table/atkins_generator"
 require "prime_multiplication_table/multiplication_table"
 
-# Multiplication table of the first count prime numbers
+# Multiplication table of the first N prime numbers
 module PrimeMultiplicationTable
   class << self
     attr_reader :configuration
