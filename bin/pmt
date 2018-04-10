@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+require "bundler/setup"
+require "prime_multiplication_table"
+
+if (ARGV[0])
+  puts PrimeMultiplicationTable.print(count: ARGV[0].to_i)
+else
+  puts "Usage: pmt [number of rows]"
+end
