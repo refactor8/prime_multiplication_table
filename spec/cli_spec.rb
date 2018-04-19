@@ -19,8 +19,8 @@ RSpec.describe PrimeMultiplicationTable::CLI do
 
     context "build command" do
       it "passes a build command to the table builder" do
-        expect(builder).to receive(:build).with(10, :atkins)
-        subject.run([[:build, 10, :atkins]])
+        expect(builder).to receive(:build).with(10, :atkins.to_s)
+        subject.run([:build, 10, :atkins.to_s])
       end
     end
   end
