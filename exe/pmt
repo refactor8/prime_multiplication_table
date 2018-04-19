@@ -2,6 +2,10 @@
 
 require 'prime_multiplication_table'
 
-cli = PrimeMultiplicationTable::CLI.new
-command = cli.load_command(ARGV.join(" "))
-cli.run(command)
+if ARGV.empty?
+  puts "Usage: pmt <number> [ATKINS | ERASTOTHENES | TRIAL]"
+else
+  cli = PrimeMultiplicationTable::CLI.new
+  command = cli.load_command(ARGV.join(" "))
+  cli.run(command)
+end
