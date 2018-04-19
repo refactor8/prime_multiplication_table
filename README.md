@@ -46,7 +46,7 @@ Table header and prime generator are configurable. To do that just add the follo
 
 ```
 PrimeMultiplicationTable.configure do |config|
-  config.prime_generator = :trial_division # :trial_division, :eratosthenes_generator, :atkins_generator
+  config.prime_generator = :atkins
   config.table_header = "Multiplication table for the first 10 prime numbers"
 end
 ```
