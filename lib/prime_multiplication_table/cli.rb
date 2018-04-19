@@ -6,14 +6,13 @@ module PrimeMultiplicationTable
       @builder = PrimeMultiplicationTable::TableBuilder.new
     end
 
-    def load_commands(commands)
-      PrimeMultiplicationTable::Command.process(commands)
+    def load_command(command)
+      PrimeMultiplicationTable::Command.process(command)
     end
 
-    def run(commands)
-      commands.each do |command, *args|
-        builder.send(command, *args)
-      end
+    def run(command)
+      command, *args = command
+      builder.send(command, *args)
     end
   end
 end
