@@ -55,7 +55,7 @@ end
 
 Execute:  
 
-    $ pmt 10
+    $ pmt FIRST <number> [ATKINS | ERASTOTHENES | TRIAL]
 
 ## Development
 

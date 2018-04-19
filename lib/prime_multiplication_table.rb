@@ -1,11 +1,15 @@
-require "terminal-table"
-require "prime_multiplication_table/version"
-require "prime_multiplication_table/configuration"
-require "prime_multiplication_table/prime"
-require "prime_multiplication_table/trial_division_generator"
-require "prime_multiplication_table/eratosthenes_generator"
-require "prime_multiplication_table/atkins_generator"
-require "prime_multiplication_table/multiplication_table"
+require 'terminal-table'
+require 'prime_multiplication_table/version'
+require 'prime_multiplication_table/cli'
+require 'prime_multiplication_table/prime'
+require 'prime_multiplication_table/prime_utility'
+require 'prime_multiplication_table/command'
+require 'prime_multiplication_table/table_builder'
+require 'prime_multiplication_table/algorithm'
+require 'prime_multiplication_table/generator'
+require 'prime_multiplication_table/trial_division_generator'
+require 'prime_multiplication_table/eratosthenes_generator'
+require 'prime_multiplication_table/atkins_generator'
 
 # Multiplication table of the first N prime numbers
 module PrimeMultiplicationTable
@@ -20,15 +24,13 @@ module PrimeMultiplicationTable
     def reset
       @configuration = Configuration.new
     end
+  end
 
-    def print(count: 10)
-      title = self.configuration.table_header
-      MultiplicationTable.new(count: count).build
+  class Configuration
+    attr_reader :title
+
+    def initialize
+      @title = "Multiplication table for the first {{count}} prime numbers"
     end
   end
-end
-
-PrimeMultiplicationTable.configure do |config|
-  config.prime_generator = :trial_division
-  config.table_header = "Multiplication table for the first 10 prime numbers"
 end

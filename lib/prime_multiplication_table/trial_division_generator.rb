@@ -1,21 +1,24 @@
 module PrimeMultiplicationTable
-  # Tests to see if an integer n, the integer to be factored, can be divided by each number in turn that is less than n.
-  class TrialDivisionGenerator
-    def generate(count: 10)
-      prime_list = Enumerator.new do |primes|
-        trial_division(primes: primes)
+  # Trial Division algorithm
+  class TrialDivisionGenerator < Generator
+    def each(ubound, &block)
+      @ubound = ubound
+      perform
+    end
+
+    def perform
+      list = Enumerator.new do |candidates|
+        prime = 2
+        0.upto(@ubound) do
+          candidates << prime
+          prime = PrimeUtility.next_prime(prime)
+        end
       end
-      prime_list.take count
+      list.take ubound
     end
 
     private
 
-    def trial_division(primes:)
-      prime = 2
-      loop do
-        primes << prime
-        prime = Prime.next_prime(number: prime)
-      end
-    end
+    attr_reader :ubound
   end
 end

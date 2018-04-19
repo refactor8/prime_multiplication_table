@@ -1,87 +1,90 @@
 module PrimeMultiplicationTable
-  # Sieve of Atkins algorithm
-  class AtkinsGenerator
-    def initialize
-      self.primes = []
-      self.limit = 1e6.to_i
-    end
-
-    def generate(count: 10)
-      return 2 if count == 1
-      compute_primes while primes.size <= count
-      primes.slice(0, count)
+  # Atkins algorithm
+  class AtkinsGenerator < Generator
+    def each(ubound, &block)
+      @ubound = ubound
+      before_perform
+      perform
+      after_perform(&block).take(ubound)
     end
 
     private
 
-    attr_accessor :primes, :limit, :sieve
+    attr_accessor :candidates
+    attr_reader :ubound
 
-    def sieve_number(x)
-      y = 1
-      while ((y*y) < limit)
-        n = (4*x*x)+(y*y)
-        if (n <= limit && (n % 12 == 1 || n % 12 == 5))
-          sieve[n] ^= true
+    def before_perform
+      self.candidates = Array.new(upper_bound, false)
+    end
+
+    def cached?
+      primes.slice(0, upper_bound) if primes.size >= upper_bound
+    end
+
+    def perform
+      cached?
+
+      (1..Float::INFINITY).each do |number|
+        sieve(number)
+        break if (number * number) > upper_bound
+      end
+
+      sieve_squares
+    end
+
+    def after_perform(&block)
+      Enumerator.new do |numbers|
+        numbers << 2 if (upper_bound > 2)
+        numbers << 3 if (upper_bound > 3)
+        candidates.each_index do |index|
+          numbers << index if candidates[index]
+          yield index if block_given?
         end
-
-        n = (3*x*x)+(y*y)
-        if (n <= limit && n % 12 == 7)
-          sieve[n] ^= true
-        end
-
-        n = (3*x*x)-(y*y)
-        if (x > y && n <= limit && n % 12 == 11)
-          sieve[n] ^= true
-        end
-
-        y += 1
       end
     end
 
-    def sieving
-      x = 1
-      while ((x*x) < limit)
-        sieve_number(x)
-        x += 1
+    def sieve(number)
+      (1..Float::INFINITY).each do |candidate|
+        ['first', 'second', 'third'].each do |method|
+          send("#{method}_step", number, candidate)
+        end
+        break if (candidate*candidate) > upper_bound
       end
     end
 
-    def mark_squares
-      r = 5
-      while ((r*r) < limit)
-        if (sieve[r])
-          i = r*r
-          while i < limit
-            sieve[i] = false
-            i += r*r
+    def sieve_squares
+      (5..Float::INFINITY).each do |number|
+        if candidates[number]
+          min = number * number
+          (min..Float::INFINITY).step(min) do |root|
+            candidates[root] = false
+            break if root > upper_bound
           end
         end
-        r += 1
+
+        break if (number * number) > upper_bound
       end
     end
 
-    def get_primes
-      a = 5
-      while a < limit
-        if sieve[a]
-          primes << a
-        end
-        a += 1
+    def first_step(number, candidate)
+      result = (4 * number*number) + (candidate * candidate)
+      if (result <= upper_bound && (result % 12 == 1 || result % 12 == 5))
+        candidates[result] ^= true
       end
-      primes
     end
 
-    def initialize_variables
-      self.sieve = Array.new(limit, false)
-      primes << 2 if (limit > 2)
-      primes << 3 if (limit > 3)
+    def second_step(number, candidate)
+      result = (3 * number * number) + (candidate * candidate)
+      if (result <= upper_bound && result % 12 == 7)
+        candidates[result] ^= true
+      end
     end
 
-    def compute_primes
-      initialize_variables
-      sieving
-      mark_squares
-      get_primes
+    def third_step(number, candidate)
+      result = (3 * number * number) - (candidate * candidate)
+      if (number > candidate && result <= upper_bound && result % 12 == 11)
+        candidates[result] ^= true
+      end
     end
   end
 end
