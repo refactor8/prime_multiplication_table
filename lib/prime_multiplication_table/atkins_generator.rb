@@ -34,8 +34,7 @@ module PrimeMultiplicationTable
 
     def after_perform(&block)
       Enumerator.new do |numbers|
-        numbers << 2 if (upper_bound > 2)
-        numbers << 3 if (upper_bound > 3)
+        add_first_primes(numbers)
         candidates.each_index do |index|
           numbers << index if candidates[index]
           yield index if block_given?
@@ -43,26 +42,39 @@ module PrimeMultiplicationTable
       end
     end
 
+    def add_first_primes(ary)
+      ary << 2 if (upper_bound > 2)
+      ary << 3 if (upper_bound > 3)
+    end
+
     def sieve(number)
       (1..Float::INFINITY).each do |candidate|
-        ['first', 'second', 'third'].each do |method|
-          send("#{method}_step", number, candidate)
-        end
+        algorithm_step(number, candidate)
         break if (candidate*candidate) > upper_bound
+      end
+    end
+
+    def algorithm_step(number, candidate)
+      ['first', 'second', 'third'].each do |method|
+        send("#{method}_step", number, candidate)
       end
     end
 
     def sieve_squares
       (5..Float::INFINITY).each do |number|
         if candidates[number]
-          min = number * number
-          (min..Float::INFINITY).step(min) do |root|
-            candidates[root] = false
-            break if root > upper_bound
-          end
+          process(number)
         end
 
         break if (number * number) > upper_bound
+      end
+    end
+
+    def process(number)
+      min = number * number
+      (min..Float::INFINITY).step(min) do |root|
+        candidates[root] = false
+        break if root > upper_bound
       end
     end
 
