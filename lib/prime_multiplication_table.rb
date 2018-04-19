@@ -14,11 +14,11 @@ require 'prime_multiplication_table/atkins_generator'
 # Multiplication table of the first N prime numbers
 module PrimeMultiplicationTable
   class << self
-    attr_reader :configuration
+    attr_accessor :configuration
 
     def configure
-      @configuration ||= Configuration.new
-      yield(configuration)
+      self.configuration ||= Configuration.new
+      yield(configuration) if block_given?
     end
 
     def reset
@@ -27,10 +27,13 @@ module PrimeMultiplicationTable
   end
 
   class Configuration
-    attr_reader :title
+    attr_accessor :title, :algorithm
 
     def initialize
-      @title = "Multiplication table for the first {{count}} prime numbers"
+      @algorithm = :atkins
+      @title = "Multiplication table for the first N prime numbers"
     end
   end
 end
+
+PrimeMultiplicationTable.configure
