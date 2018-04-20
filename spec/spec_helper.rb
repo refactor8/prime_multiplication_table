@@ -1,9 +1,11 @@
 $: << '../lib'
 
 require "bundler/setup"
-require "simplecov"
 require 'benchmark'
 require "prime_multiplication_table"
+require "simplecov"
+require 'simplecov-console'
+SimpleCov.formatter = SimpleCov.formatter = SimpleCov::Formatter::Console
 
 SimpleCov.start
 
