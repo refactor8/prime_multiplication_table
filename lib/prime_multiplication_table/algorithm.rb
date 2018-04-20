@@ -1,6 +1,15 @@
 module PrimeMultiplicationTable
+  # Algorithm used to generate prime numbers
   class Algorithm
-    def self.process(algorithm)
+    attr_reader :algorithm
+
+    def initialize(algorithm = nil)
+      @algorithm = algorithm
+      process if algorithm
+      set_default unless algorithm
+    end
+
+    def process
       case algorithm
       when /\AATKINS\Z/i
         AtkinsGenerator.new
@@ -9,8 +18,12 @@ module PrimeMultiplicationTable
       when /\ATRIAL\Z/i
         TrialDivisionGenerator.new
       else
-        [:invalid]
+        :invalid
       end
+    end
+
+    def set_default
+      @algorithm = PrimeMultiplicationTable.configuration.algorithm
     end
   end
 end
