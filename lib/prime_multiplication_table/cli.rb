@@ -1,4 +1,5 @@
 module PrimeMultiplicationTable
+  # Reads the number of primes from the terminal
   class CLI
     attr_reader :builder
 

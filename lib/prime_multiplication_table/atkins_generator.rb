@@ -39,8 +39,6 @@ module PrimeMultiplicationTable
       end
     end
 
-
-
     def sieve(number)
       (1..Float::INFINITY).each do |candidate|
         algorithm_step(number, candidate)
@@ -70,9 +68,10 @@ module PrimeMultiplicationTable
         break if root > upper_bound
       end
     end
-    def get_primes(ary)
-      ary.each_index do |index|
-        ary << index if ary[index]
+
+    def get_primes(numbers)
+      candidates.each_index do |index|
+        numbers << index if candidates[index]
         yield index if block_given?
       end
     end
